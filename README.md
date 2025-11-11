@@ -1,143 +1,94 @@
-# Analogy Maker - Development Requirements
+# Analogy Maker
 
-## Project Overview
-A minimal webapp that creates creative analogies between two seemingly unrelated concepts using etymology and linguistic connections. Built with pure HTML/CSS/JS for maximum simplicity and minimal dependencies.
+A minimal webapp that creates creative analogies between two seemingly unrelated concepts using etymology and linguistic connections.
 
-## Technical Stack
-- **Frontend**: Pure HTML, CSS, and vanilla JavaScript (no frameworks, no build tools)
-- **LLM API**: Google Gemini Flash 1.5 (generous free tier, fast, affordable)
-- **Hosting**: Local development first, Netlify deployment later
-- **Total Files**: 3 files maximum (index.html, style.css, script.js)
+## 🚀 Live Demo
+[View on Netlify](https://your-site-name.netlify.app) _(replace with your URL)_
 
-## Features
+## ✨ Features
+- Dark minimalist design with elegant serif typography
+- 350-word analogies focusing on etymology and creative connections
+- Natural, human-sounding output (no AI-speak)
+- Usage tracking panel (local browser storage)
+- Copy to clipboard functionality
+- Fully responsive design
 
-### User Interface
-- **Dark theme** with modern minimalist design
-- **Serif fonts** in white for elegant typography
-- Two text input fields for entering concepts to compare
-- Single submit button to generate analogy
-- Output text area displaying the generated analogy
-- Copy button to copy the result to clipboard
+## 🛠 Tech Stack
+- Pure HTML/CSS/JavaScript (no frameworks)
+- Google Gemini 2.5 Flash-Lite API
+- Netlify Functions (serverless backend)
+- Deployed on Netlify
 
-### Functionality
-1. User enters two different concepts (e.g., "miso" and "misogyny")
-2. On submit, send both terms to Google Gemini API with system prompt
-3. Display generated analogy in output area
-4. Allow user to copy the result
+## 📦 Project Structure
 
-### LLM Integration
-- **API**: Google Gemini Flash 1.5 (free tier: 15 RPM, 1 million TPM, 1500 RPD)
-- **API Key**: Client-side implementation (exposed in code - acceptable for local/personal use)
-- **System Prompt**: Designed to generate natural-sounding analogies
-
-## System Prompt Design
-
-```
-You are a creative linguist and etymologist. Compare the following two concepts and create an analogy between them. Focus primarily on etymology if relevant, but also explore phonetic similarities, cultural connections, or conceptual parallels. Write exactly 350 words in a natural, conversational tone. Do not use em dashes (—), avoid overly formal or AI-typical phrases like "delve into," "it's worth noting," "in conclusion," or "ultimately." Write as a human would: direct, engaging, and insightful.
-
-Concept 1: {input1}
-Concept 2: {input2}
-
-Create your analogy:
-```
-
-## Design Specifications
-
-### Color Scheme (Dark Theme)
-- Background: Deep dark gray/black (#0a0a0a or similar)
-- Text: White (#ffffff) or off-white (#f5f5f5)
-- Accent: Subtle gray for borders/inputs (#2a2a2a)
-- Hover states: Slightly lighter variants
-- Button: Elegant contrast (white text on dark accent)
-
-### Typography
-- Primary font: Serif font (e.g., Georgia, Crimson Text, or Lora from Google Fonts)
-- Font sizes: Large enough for readability, generous spacing
-- Line height: 1.6-1.8 for comfortable reading
-
-### Layout
-- Centered design with max-width container (600-800px)
-- Generous whitespace and padding
-- Responsive design (mobile-friendly)
-- Clean, uncluttered interface
-
-### Components
-1. **Header**: Simple title "Analogy Maker"
-2. **Input Fields**: Two elegant text inputs with subtle borders, labeled clearly
-3. **Submit Button**: Prominent, centered, with hover effect
-4. **Output Area**: Text display with subtle border, good contrast
-5. **Copy Button**: Small, positioned near output, provides feedback on click
-
-## File Structure
 ```
 analogy-maker/
-├── index.html          # Main HTML structure
-├── style.css           # All styling
-├── script.js           # API calls and interaction logic
-└── development.md      # This file
+├── index.html                          # Main HTML structure
+├── style.css                           # All styling
+├── script.js                           # Frontend logic and API calls
+├── netlify.toml                        # Netlify configuration
+├── netlify/functions/
+│   └── generate-analogy.js            # Serverless function (keeps API key secure)
+└── .gitignore                         # Git ignore file
 ```
 
-## Implementation Notes
+## 🚀 Deployment to Netlify
 
-### API Setup
-1. Get free API key from Google AI Studio (https://makersuite.google.com/app/apikey)
-2. Store API key in script.js as constant (will move to backend for production)
-3. Use fetch API to call Gemini REST endpoint
+### Prerequisites
+- [Netlify account](https://app.netlify.com/) (free tier)
+- [Google Gemini API key](https://aistudio.google.com/app/apikey) (free tier: 1000 requests/day)
+- GitHub account
 
-### API Endpoint
+### Step 1: Push to GitHub
+
+### Step 2: Deploy on Netlify
+1. Go to [Netlify](https://app.netlify.com/)
+2. Click "Add new site" → "Import an existing project"
+3. Choose GitHub and select your repository
+4. Build settings are auto-configured via `netlify.toml`
+5. Click "Deploy site"
+
+### Step 3: Add Environment Variable
+1. In Netlify dashboard → "Site configuration" → "Environment variables"
+2. Add variable:
+   - **Key**: `GEMINI_API_KEY`
+   - **Value**: Your Google Gemini API key
+3. Go to "Deploys" → "Trigger deploy" → "Deploy site"
+
+### Step 4: Done!
+Visit your site at `https://analogy.netlify.app/`
+
+## 🔧 Local Development
+
+Open `index.html` in your browser. Note: Netlify Functions won't work locally unless you use Netlify CLI:
+
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Run local dev server
+netlify dev
 ```
-POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}
-```
 
-### Error Handling
-- Display friendly error messages if API fails
-- Handle network errors gracefully
-- Validate that both inputs are filled before submitting
-- Show loading state during API call
+Then visit `http://localhost:8888`
 
-### Output Processing
-- Remove em dashes (—) if present in response
-- Filter out common AI phrases if detected
-- Ensure exactly 350 words (handled by prompt)
+## 🔑 Security Note
 
-## Development Workflow
-1. Create basic HTML structure
-2. Style with CSS (dark theme, serif fonts)
-3. Implement JavaScript API integration
-4. Test with various concept pairs
-5. Refine prompt based on output quality
-6. Add polish (animations, transitions, micro-interactions)
+Your API key is **securely stored** in Netlify's environment variables and never exposed to the browser. The Netlify Function acts as a proxy between your frontend and Google's API.
 
-## Future Enhancements (Post-MVP)
-- Netlify Functions for API key security
-- Local storage to save favorite analogies
-- Share functionality
-- Multiple comparison modes (optional)
-- Rate limiting and caching
+## 📝 Rate Limits
 
-## Success Criteria
-- ✅ Minimal codebase (3 files, no dependencies except Google Fonts)
-- ✅ Beautiful, dark, minimalist interface
-- ✅ Fast load times (<1s)
-- ✅ Natural-sounding analogies (no AI-speak)
-- ✅ Smooth user experience with proper feedback
-- ✅ Works on all modern browsers
-- ✅ Responsive design for mobile and desktop
+- **Free tier**: 1000 requests per day (resets at midnight PT)
+- **Local tracking**: Browser-based counter to monitor your usage
+- Click the white circle in bottom-right to view usage stats
 
-## Testing Checklist
-- [ ] Both inputs accept text correctly
-- [ ] Submit button triggers API call
-- [ ] Loading state displays during API call
-- [ ] Output displays formatted analogy
-- [ ] Copy button successfully copies to clipboard
-- [ ] Error states handled gracefully
-- [ ] Works on Chrome, Firefox, Safari
-- [ ] Mobile responsive
-- [ ] Analogies sound human and natural
-- [ ] Etymology focus when applicable
+## 🎨 Customization
 
-## Example Use Case
-**Input 1**: miso  
-**Input 2**: misogyny  
+Edit these files to customize:
+- `style.css` - Colors, fonts, layout
+- `script.js` - Daily limit, behavior
+- `netlify/functions/generate-analogy.js` - System prompt, API settings
 
-**Expected Output**: A 350-word analogy exploring the etymological roots of both terms, phonetic similarities, and creative connections between a fermented soybean paste and hatred toward women, written in natural, human-sounding prose.
+## 📄 License
+
+MIT License - feel free to use and modify!
