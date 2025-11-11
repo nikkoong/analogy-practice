@@ -28,7 +28,7 @@
 3. Click "Add a variable"
 4. Add:
    - **Key**: `GEMINI_API_KEY`
-   - **Value**: `AIzaSyDYBU82wQaN5NqtyCBapON0uqVczcKX788`
+   - **Value**: `key_here` (replace with your actual API key)
 5. Click "Save"
 6. Go to "Deploys" and click "Trigger deploy" → "Deploy site"
 
