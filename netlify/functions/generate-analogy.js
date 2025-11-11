@@ -1,8 +1,6 @@
 // Netlify serverless function to proxy Gemini API requests
 // This keeps your API key secure on the server side
 
-const fetch = require('node-fetch');
-
 exports.handler = async (event, context) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
