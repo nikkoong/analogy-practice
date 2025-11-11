@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analogy Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Analogy Maker</h1>
+            <p class="subtitle">Discover unexpected connections between any two concepts</p>
+        </header>
+
+        <main>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <label for="concept1">First Concept</label>
+                    <input 
+                        type="text" 
+                        id="concept1" 
+                        placeholder="e.g., miso"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="input-wrapper">
+                    <label for="concept2">Second Concept</label>
+                    <input 
+                        type="text" 
+                        id="concept2" 
+                        placeholder="e.g., misogyny"
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+            <button id="generateBtn" class="generate-btn">
+                <span class="btn-text">Create Analogy</span>
+                <span class="btn-loader">Generating...</span>
+            </button>
+
+            <div id="outputSection" class="output-section hidden">
+                <div class="output-header">
+                    <h2>Your Analogy</h2>
+                    <button id="copyBtn" class="copy-btn">
+                        <span class="copy-text">Copy</span>
+                        <span class="copied-text">Copied!</span>
+                    </button>
+                </div>
+                <div id="output" class="output"></div>
+            </div>
+
+            <div id="errorMessage" class="error-message hidden"></div>
+        </main>
+    </div>
+
+    <!-- Hidden usage panel trigger -->
+    <div id="usageTrigger" class="usage-trigger"></div>
+
+    <!-- Usage panel -->
+    <div id="usagePanel" class="usage-panel hidden">
+        <div class="usage-header">
+            <h3>API Usage</h3>
+            <button id="closePanel" class="close-panel">×</button>
+        </div>
+        <div class="usage-content">
+            <div class="usage-stat">
+                <span class="stat-label">Requests Today:</span>
+                <span id="requestCount" class="stat-value">0</span>
+            </div>
+            <div class="usage-stat">
+                <span class="stat-label">Daily Limit:</span>
+                <span id="dailyLimit" class="stat-value">1000</span>
+            </div>
+            <div class="usage-bar">
+                <div id="usageProgress" class="usage-progress"></div>
+            </div>
+            <div class="usage-percentage">
+                <span id="usagePercent">0%</span> used
+            </div>
+            <div class="reset-info">
+                Resets at midnight PT <br>
+                Based on local usage
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

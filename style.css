@@ -1,0 +1,377 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Crimson Text', Georgia, serif;
+    background-color: #0a0a0a;
+    color: #f5f5f5;
+    line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.container {
+    max-width: 700px;
+    width: 100%;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #999;
+    font-weight: 400;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-size: 0.95rem;
+    color: #999;
+    letter-spacing: 0.5px;
+}
+
+input {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #f5f5f5;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.2rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input:focus {
+    border-color: #4a4a4a;
+    background-color: #1f1f1f;
+}
+
+input::placeholder {
+    color: #555;
+}
+
+.generate-btn {
+    background-color: #f5f5f5;
+    color: #0a0a0a;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.generate-btn:hover:not(:disabled) {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+.generate-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-loader {
+    display: none;
+}
+
+.generate-btn.loading .btn-text {
+    display: none;
+}
+
+.generate-btn.loading .btn-loader {
+    display: inline;
+}
+
+.output-section {
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.output-section.hidden {
+    display: none;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.output-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.copy-btn {
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.copy-btn:hover {
+    background-color: #3a3a3a;
+    border-color: #4a4a4a;
+}
+
+.copied-text {
+    display: none;
+}
+
+.copy-btn.copied .copy-text {
+    display: none;
+}
+
+.copy-btn.copied .copied-text {
+    display: inline;
+}
+
+.copy-btn.copied {
+    background-color: #3a3a3a;
+}
+
+.output {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 2rem;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.error-message {
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background-color: #2a1a1a;
+    border: 1px solid #4a2a2a;
+    border-radius: 8px;
+    color: #ff9999;
+    font-size: 1rem;
+}
+
+.error-message.hidden {
+    display: none;
+}
+
+/* Usage tracking panel */
+.usage-trigger {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 15px;
+    height: 15px;
+    background-color: #ffffff;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.usage-trigger:hover {
+    background-color: #cccccc;
+    transform: scale(1.1);
+}
+
+.usage-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.usage-panel.hidden {
+    display: none;
+}
+
+.usage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.usage-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-panel {
+    background: none;
+    border: none;
+    color: #f5f5f5;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.close-panel:hover {
+    color: #999;
+}
+
+.usage-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.usage-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-label {
+    color: #999;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #f5f5f5;
+}
+
+.usage-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.usage-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #4a9eff 0%, #ff4a6e 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.usage-percentage {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.reset-info {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    input {
+        font-size: 1.1rem;
+        padding: 0.9rem 1rem;
+    }
+
+    .generate-btn {
+        font-size: 1rem;
+        padding: 0.9rem 2rem;
+    }
+
+    .output {
+        padding: 1.5rem;
+        font-size: 1.05rem;
+    }
+
+    .output-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .usage-panel {
+        width: calc(100vw - 40px);
+        right: 20px;
+        left: 20px;
+    }
+}
