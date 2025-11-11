@@ -3,7 +3,7 @@
 A minimal webapp that creates creative analogies between two seemingly unrelated concepts using etymology and linguistic connections.
 
 ## 🚀 Live Demo
-[View on Netlify](https://your-site-name.netlify.app) _(replace with your URL)_
+[View on Netlify](https://analogy.netlify.app/)
 
 ## ✨ Features
 - Dark minimalist design with elegant serif typography
