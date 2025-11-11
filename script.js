@@ -126,17 +126,8 @@ const generateAnalogy = async () => {
         output.textContent = cleanedText;
         outputSection.classList.remove('hidden');
         
-        // Update usage display with server-side data
-        if (data.usage) {
-            // Server returns real usage - update display
-            requestCount.textContent = data.usage.current;
-            const percentage = Math.min((data.usage.current / data.usage.limit) * 100, 100);
-            usageProgress.style.width = `${percentage}%`;
-            usagePercent.textContent = `${Math.round(percentage)}%`;
-        } else {
-            // Fallback to local counter for backward compatibility
-            incrementUsage();
-        }
+        // Update usage count (client-side tracking)
+        incrementUsage();
         
     } catch (error) {
         console.error('Error:', error);
@@ -251,31 +242,5 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Fetch server-side usage on page load
-const fetchServerUsage = async () => {
-    try {
-        // Make a GET request to get current usage (we'll add this endpoint)
-        const response = await fetch('/.netlify/functions/get-usage');
-        if (response.ok) {
-            const data = await response.json();
-            if (data.usage) {
-                requestCount.textContent = data.usage.current;
-                const percentage = Math.min((data.usage.current / data.usage.limit) * 100, 100);
-                usageProgress.style.width = `${percentage}%`;
-                usagePercent.textContent = `${Math.round(percentage)}%`;
-                
-                // Disable button if at limit
-                if (data.usage.current >= data.usage.limit) {
-                    generateBtn.disabled = true;
-                    showError(`Daily limit of ${data.usage.limit} requests reached. Resets at midnight PT.`);
-                }
-            }
-        }
-    } catch (error) {
-        console.log('Could not fetch server usage, using local counter');
-        updateUsageDisplay(); // Fallback to local
-    }
-};
-
-// Initialize by fetching server usage
-fetchServerUsage();
+// Initialize usage display on page load
+updateUsageDisplay();
