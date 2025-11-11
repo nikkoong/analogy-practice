@@ -4,8 +4,9 @@
 # Local Netlify folder
 .netlify
 
-# Node modules (if you add any)
+# Node modules
 node_modules/
+package-lock.json
 
 # OS files
 .DS_Store

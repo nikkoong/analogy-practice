@@ -100,7 +100,22 @@ const generateAnalogy = async () => {
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error?.message || 'Failed to generate analogy');
+            
+            // Handle rate limit error specifically
+            if (response.status === 429) {
+                generateBtn.disabled = true; // Disable button
+                showError(errorData.error || 'Daily limit reached');
+                
+                // Update usage display to show we're at limit
+                if (errorData.usage) {
+                    requestCount.textContent = errorData.usage.current;
+                    usageProgress.style.width = '100%';
+                    usagePercent.textContent = '100%';
+                }
+                return;
+            }
+            
+            throw new Error(errorData.error || 'Failed to generate analogy');
         }
         
         const data = await response.json();
@@ -111,8 +126,17 @@ const generateAnalogy = async () => {
         output.textContent = cleanedText;
         outputSection.classList.remove('hidden');
         
-        // Increment usage counter on success
-        incrementUsage();
+        // Update usage display with server-side data
+        if (data.usage) {
+            // Server returns real usage - update display
+            requestCount.textContent = data.usage.current;
+            const percentage = Math.min((data.usage.current / data.usage.limit) * 100, 100);
+            usageProgress.style.width = `${percentage}%`;
+            usagePercent.textContent = `${Math.round(percentage)}%`;
+        } else {
+            // Fallback to local counter for backward compatibility
+            incrementUsage();
+        }
         
     } catch (error) {
         console.error('Error:', error);
@@ -227,5 +251,31 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Initialize usage display
-updateUsageDisplay();
+// Fetch server-side usage on page load
+const fetchServerUsage = async () => {
+    try {
+        // Make a GET request to get current usage (we'll add this endpoint)
+        const response = await fetch('/.netlify/functions/get-usage');
+        if (response.ok) {
+            const data = await response.json();
+            if (data.usage) {
+                requestCount.textContent = data.usage.current;
+                const percentage = Math.min((data.usage.current / data.usage.limit) * 100, 100);
+                usageProgress.style.width = `${percentage}%`;
+                usagePercent.textContent = `${Math.round(percentage)}%`;
+                
+                // Disable button if at limit
+                if (data.usage.current >= data.usage.limit) {
+                    generateBtn.disabled = true;
+                    showError(`Daily limit of ${data.usage.limit} requests reached. Resets at midnight PT.`);
+                }
+            }
+        }
+    } catch (error) {
+        console.log('Could not fetch server usage, using local counter');
+        updateUsageDisplay(); // Fallback to local
+    }
+};
+
+// Initialize by fetching server usage
+fetchServerUsage();

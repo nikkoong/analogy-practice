@@ -1,6 +1,12 @@
 // Netlify serverless function to proxy Gemini API requests
 // This keeps your API key secure on the server side
 
+// Import Netlify Blobs for server-side rate limiting
+const { getStore } = require('@netlify/blobs');
+
+// Rate limit configuration
+const DAILY_LIMIT = 1000;
+
 exports.handler = async (event, context) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
@@ -17,6 +23,38 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'API key not configured' })
+    };
+  }
+
+  // STEP 1: Initialize Netlify Blobs store
+  // This creates/accesses a "database" called 'rate-limit'
+  const store = getStore('rate-limit');
+  
+  // STEP 2: Get current usage data
+  // We store it as JSON with count and date
+  const usageData = await store.get('daily-usage', { type: 'json' });
+  const today = new Date().toISOString().split('T')[0]; // Format: "2025-11-11"
+  
+  // STEP 3: Check if we need to reset the counter (new day)
+  let currentCount = 0;
+  if (usageData && usageData.date === today) {
+    // Same day, use existing count
+    currentCount = usageData.count;
+  }
+  // If different day or no data, currentCount stays 0 (fresh start)
+  
+  // STEP 4: Check if we've hit the limit
+  if (currentCount >= DAILY_LIMIT) {
+    return {
+      statusCode: 429, // 429 = Too Many Requests
+      body: JSON.stringify({ 
+        error: `Daily limit of ${DAILY_LIMIT} requests reached. Resets at midnight PT.`,
+        usage: {
+          current: currentCount,
+          limit: DAILY_LIMIT,
+          resetDate: today
+        }
+      })
     };
   }
 
@@ -85,13 +123,28 @@ Create your analogy:`;
 
     const data = await response.json();
     
-    // Return the response
+    // STEP 5: Increment the counter AFTER successful API call
+    // This ensures we only count successful requests
+    const newCount = currentCount + 1;
+    await store.set('daily-usage', JSON.stringify({
+      count: newCount,
+      date: today
+    }));
+    
+    // Return the response with usage info
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        ...data,
+        usage: {
+          current: newCount,
+          limit: DAILY_LIMIT,
+          remaining: DAILY_LIMIT - newCount
+        }
+      })
     };
 
   } catch (error) {
